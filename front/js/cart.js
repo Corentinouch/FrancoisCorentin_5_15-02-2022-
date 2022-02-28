@@ -1,3 +1,4 @@
+
 let storage = JSON.parse(localStorage.getItem('panier'));
 console.log(storage);
 

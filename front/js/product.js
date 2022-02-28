@@ -51,21 +51,36 @@ let objJson = storage !== null ? storage : {};
 function storageAll(){
     let nombre = document.querySelector("#quantity");
     let couleur = item.querySelector("#colors");
+
+    //Vérification nombre et couleur
+    if(nombre.value <= 0 || nombre.value > 100){
+        alert("Veuillez entrer un nombre entre 1 et 100")
+        return;
+    }
+
+    if(!couleur.value){
+        alert("Veuillez selectionner une couleur")
+        return;
+    }
+
     if(objJson[produit._id] !== undefined){
         objJson[produit._id].color[couleur.value] === undefined ? objJson[produit._id].color[couleur.value] = nombre.value 
             : objJson[produit._id].color[couleur.value] = parseInt(nombre.value) + parseInt(objJson[produit._id].color[couleur.value]);
     }else{
         objJson[produit._id] = {}
         objJson[produit._id].color = {}
-        objJson[produit._id].color[couleur.value] = nombre.value;
-        objJson[produit._id].name = produit.name;
+        objJson[produit._id].color[couleur.value] = parseInt(nombre.value);
+        
+       /* objJson[produit._id].name = produit.name;
         objJson[produit._id].price = produit.price;
         objJson[produit._id].imageUrl = produit.imageUrl;
-        objJson[produit._id].description = produit.description;
+        objJson[produit._id].description = produit.description;*/
     }
         
         let objLinea = JSON.stringify(objJson);
-        localStorage.setItem("panier",objLinea);
+        localStorage.setItem("panier",objLinea);{
+            alert("Votre canapé a bien été ajouter au panier !")
+        }
 
 }
     
