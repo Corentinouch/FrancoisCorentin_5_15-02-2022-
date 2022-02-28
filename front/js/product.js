@@ -1,23 +1,22 @@
 const str = window.location.href;
-console.log(str);
+console.log(str,"location");
 const url = new URL(str);
-console.log(url);
+console.log(url,"URL");
 const id = url.searchParams.get("id");
-console.log(id);
-
-let storage = JSON.parse(localStorage.getItem("panier"));
+console.log(id,"ID");
+/*let storage = JSON.parse(localStorage.getItem("panier"));
 console.log(storage);
-let objJson = storage !== null ? storage : {};
+let objJson = storage !== null ? storage : {};*/
 
 
     fetch("http://localhost:3000/api/products/" + id).then(async (res) =>{
         const produit = await res.json();
-        console.log(produit);
+        console.log(produit, "Canapé de la page actuelle");
 
 //Remplacement des valeurs dans le .html 
 
     let item = document.querySelector(".item");
-
+    
         item.querySelector(".item__img").innerHTML +=
         `<img src="${produit.imageUrl}" alt=${produit.altTxt}>
         `;
@@ -37,51 +36,89 @@ let objJson = storage !== null ? storage : {};
 //Menu déroulent des couleurs de chaque produit
 
     let colors = produit.colors;
-    console.log(colors);
+    console.log(colors, "Couleur possibles");
 
     for (let i = 0; i < colors.length; i++) {
-        const color = colors[i];
-        console.log(color);
+        //const color = colors[i];
+        //console.log(color);
         item.querySelector("#colors").innerHTML +=
             `<option value="${produit.colors[i]}">${produit.colors[i]}</option>`;
     }
-    
-//Storage au moment du click sur ajout
+    console.log(produit._id);
+
+//Fontion storage au moment du click sur ajout
 
 function storageAll(){
-    let nombre = document.querySelector("#quantity");
-    let couleur = item.querySelector("#colors");
+    let quantity = document.querySelector("#quantity").value;
+    let color = item.querySelector("#colors").value;
+    let storage = localStorage;
+    console.log(storage,"STORAGE");
 
     //Vérification nombre et couleur
-    if(nombre.value <= 0 || nombre.value > 100){
+    if(quantity <= 0 || quantity > 100){
         alert("Veuillez entrer un nombre entre 1 et 100")
         return;
     }
 
-    if(!couleur.value){
+    if(!color){
         alert("Veuillez selectionner une couleur")
         return;
     }
 
-    if(objJson[produit._id] !== undefined){
-        objJson[produit._id].color[couleur.value] === undefined ? objJson[produit._id].color[couleur.value] = nombre.value 
-            : objJson[produit._id].color[couleur.value] = parseInt(nombre.value) + parseInt(objJson[produit._id].color[couleur.value]);
+    item["quantity"] = quantity;
+    item["color"] = color;
+    console.log(quantity,"QUANTITE Affichée");
+    let cart = [];
+
+    const storageCart = JSON.parse(storage.getItem("cart"));
+
+    if (storageCart && storageCart.length) {
+        cart = JSON.parse(storage.getItem("cart"));
+
+        const hasColor = cart.filter(
+            (x) => x.color === color && x.id === id
+        );
+        console.log(cart,"CARTE");
+            
+            console.log(quantity,"QUANTITE affiché aussi");
+
+                if (hasColor && hasColor.length){
+                    hasColor[0].quantity = parseInt(quantity) + parseInt(hasColor[0].quantity);
+                    console.log(hasColor[0].quantity);
+
+                }else {
+                    cart.push({id: produit._id, quantity: item.quantity, color: item.color});
+                    console.log("elseeee");
+                }
+
+        storage.setItem("cart",JSON.stringify(cart));
+
+    } else {
+        cart.push({id: produit._id, quantity: item.quantity, color: item.color});
+        storage.setItem("cart", JSON.stringify(cart));
+        console.log(cart);
+    }
+    alert("Ajouté au panier");
+
+    /*if(objJson[produit._id] !== undefined){
+        objJson[produit._id].color[couleur.value] === undefined ? objJson[produit._id].color[couleur.value] = quantity.value 
+            : objJson[produit._id].color[couleur.value] = parseInt(quantity.value) + parseInt(objJson[produit._id].color[couleur.value]);
     }else{
         objJson[produit._id] = {}
         objJson[produit._id].color = {}
-        objJson[produit._id].color[couleur.value] = parseInt(nombre.value);
+        objJson[produit._id].color[couleur.value] = parseInt(quantity.value);
         
        /* objJson[produit._id].name = produit.name;
         objJson[produit._id].price = produit.price;
         objJson[produit._id].imageUrl = produit.imageUrl;
-        objJson[produit._id].description = produit.description;*/
+        objJson[produit._id].description = produit.description;
     }
         
         let objLinea = JSON.stringify(objJson);
         localStorage.setItem("panier",objLinea);{
             alert("Votre canapé a bien été ajouter au panier !")
         }
-
+*/
 }
     
     let addItem = document.getElementById('addToCart');
