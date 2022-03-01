@@ -11,7 +11,7 @@ let objJson = storage !== null ? storage : {};*/
 
     fetch("http://localhost:3000/api/products/" + id).then(async (res) =>{
         const produit = await res.json();
-        console.log(produit, "Canapé de la page actuelle");
+        console.log(produit);
 
 //Remplacement des valeurs dans le .html 
 
@@ -36,7 +36,7 @@ let objJson = storage !== null ? storage : {};*/
 //Menu déroulent des couleurs de chaque produit
 
     let colors = produit.colors;
-    console.log(colors, "Couleur possibles");
+    console.log(colors);
 
     for (let i = 0; i < colors.length; i++) {
         //const color = colors[i];
@@ -52,7 +52,7 @@ function storageAll(){
     let quantity = document.querySelector("#quantity").value;
     let color = item.querySelector("#colors").value;
     let storage = localStorage;
-    console.log(storage,"STORAGE");
+    console.log(storage);
 
     //Vérification nombre et couleur
     if(quantity <= 0 || quantity > 100){
@@ -67,7 +67,7 @@ function storageAll(){
 
     item["quantity"] = quantity;
     item["color"] = color;
-    console.log(quantity,"QUANTITE Affichée");
+    console.log(quantity);
     let cart = [];
 
     const storageCart = JSON.parse(storage.getItem("cart"));
@@ -80,21 +80,20 @@ function storageAll(){
         );
         console.log(cart,"CARTE");
             
-            console.log(quantity,"QUANTITE affiché aussi");
+            console.log(quantity);
 
                 if (hasColor && hasColor.length){
                     hasColor[0].quantity = parseInt(quantity) + parseInt(hasColor[0].quantity);
                     console.log(hasColor[0].quantity);
 
                 }else {
-                    cart.push({id: produit._id, quantity: item.quantity, color: item.color});
-                    console.log("elseeee");
+                    cart.push({id: produit._id, quantity: parseInt(item.quantity), color: item.color});
                 }
 
         storage.setItem("cart",JSON.stringify(cart));
 
     } else {
-        cart.push({id: produit._id, quantity: item.quantity, color: item.color});
+        cart.push({id: produit._id, quantity: parseInt(item.quantity), color: item.color});
         storage.setItem("cart", JSON.stringify(cart));
         console.log(cart);
     }
