@@ -72,7 +72,7 @@ function storageAll(){
 
     const storageCart = JSON.parse(storage.getItem("cart"));
 
-    if (storageCart && storageCart.length) {
+    if (storageCart && storageCart.length ) {
         cart = JSON.parse(storage.getItem("cart"));
 
         const hasColor = cart.filter(

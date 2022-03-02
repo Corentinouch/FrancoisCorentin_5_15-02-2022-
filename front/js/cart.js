@@ -85,23 +85,23 @@ fetch("http://localhost:3000/api/products").then(async (res) => {
 
     panierQuantity[i].addEventListener("change", function() {
       console.log("panierQuantity");
-      let cart = [];
-      localStorage.setItem("cart",JSON.stringify(cart));
+      //let cart = [];
+      //localStorage.setItem("cart",JSON.stringify(cart));
       //changement sur le local storage
     });
-
-    
   }
   
   let suppr = document.querySelectorAll('.deleteItem');
-  console.log(suppr)
+  console.log(suppr);
 
   for (let i = 0; i < suppr.length; i++) {
-    console.log(i);
+    console.log(storage[i],"test")
     suppr[i].addEventListener("click", function() {
-      suppr[i].closest('.cart__item').remove();
-      console.log("suppr kanap");
+      //suppr[i].closest('.cart__item').remove();
+      console.log(suppr[i].closest('.cart__item').dataset.id,suppr[i].closest('.cart__item').dataset.color);
       //remove du localStorage
+      
+      localStorage.removeItem(storage[i]);
     });
   }
 });
