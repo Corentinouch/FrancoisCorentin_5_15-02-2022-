@@ -68,8 +68,7 @@ fetch("http://localhost:3000/api/products").then(async (res) => {
       `${quantitytotal}`;
     document.getElementById('totalPrice').innerHTML +=
       `${pricetotal}`;
-
-  } else {
+  }else{
     let cartprice = document.querySelector(".cart__price");
     let cartform = document.querySelector(".cart__order");
     cartprice.remove();
@@ -83,8 +82,28 @@ fetch("http://localhost:3000/api/products").then(async (res) => {
 
   for (let i = 0; i < panierQuantity.length; i++) {
 
-    panierQuantity[i].addEventListener("change", function() {
+    panierQuantity[i].addEventListener("change", function(event) {
+      let quantity = parseInt(event.target.value);
+      if(quantity <= 0 || quantity > 100){
+        alert("Veuillez entrer un nombre entre 1 et 100")
+        return;
+    }
       console.log("panierQuantity");
+      let id_suppr = panierQuantity[i].closest('.cart__item').dataset.id;
+      let color_suppr = panierQuantity[i].closest('.cart__item').dataset.color;
+      storage= storage.map((item)=>{
+        if(item.id === id_suppr && item.color === color_suppr){
+          return {
+            ...item,
+          //spread operator
+            quantity
+          }
+        }else{
+          return item;
+        }
+      })
+      localStorage.setItem("cart", JSON.stringify(storage));
+      window.location.reload();
       //let cart = [];
       //localStorage.setItem("cart",JSON.stringify(cart));
       //changement sur le local storage
@@ -94,17 +113,184 @@ fetch("http://localhost:3000/api/products").then(async (res) => {
   let suppr = document.querySelectorAll('.deleteItem');
   console.log(suppr);
 
+  
   for (let i = 0; i < suppr.length; i++) {
     console.log(storage[i],"test")
     suppr[i].addEventListener("click", function() {
+      let id_suppr = suppr[i].closest('.cart__item').dataset.id;
+      let color_suppr = suppr[i].closest('.cart__item').dataset.color;
+      storage = storage.filter((item) =>{
+        if(item.id !== id_suppr || item.color !== color_suppr){
+          return item;
+        }
+      })
       //suppr[i].closest('.cart__item').remove();
-      console.log(suppr[i].closest('.cart__item').dataset.id,suppr[i].closest('.cart__item').dataset.color);
       //remove du localStorage
-      
-      localStorage.removeItem(storage[i]);
+      console.log(storage);
+     if (storage.length < 1){
+       localStorage.removeItem("cart");
+     }else{
+        localStorage.setItem("cart", JSON.stringify(storage)); 
+     }
+     window.location.reload();
+     
+     
     });
   }
 });
+
+//Prénom
+let prenom = document.getElementById('firstName');
+let regexname = /^[A-Za-z -]+$/;
+let regexmail = /\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi;
+
+let prenomerror = document.getElementById('firstNameErrorMsg')
+console.log(prenom);
+
+
+function verifprenom(){
+  console.log(prenom.value,"valeur apres changemenent");
+  let result = prenom.value.match(regexname);
+  console.log(result, "resultat");
+
+  if (result){
+    prenom.style.cssText += 'border:2px green solid';
+    prenomerror.innerHTML = 'ok'
+    return true;
+  }else{
+    prenom.style.cssText += 'border:2px red solid';
+    prenomerror.innerHTML = 'pas ok'
+    return false;
+  }
+};
+prenom.addEventListener("change", verifprenom);
+
+//Nom
+let nom = document.getElementById('lastName');
+let nomerror = document.getElementById('lastNameErrorMsg')
+
+function verifnom(){
+  console.log(nom.value,"valeur apres changemenent");
+  let result = nom.value.match(regexname);
+  console.log(result, "resultat");
+
+if (result){
+  nom.style.cssText += 'border:2px green solid';
+  nomerror.innerHTML = 'ok'
+  return true
+}else{
+  nom.style.cssText += 'border:2px red solid';
+  nomerror.innerHTML = 'pas ok'
+  return false
+}
+}
+nom.addEventListener("change", verifnom);
+  
+
+//adresse
+let adresse = document.getElementById('address');
+let adresserror = document.getElementById('addressErrorMsg')
+console.log(adresse);
+
+function verifadresse(){
+  console.log(adresse.value,"valeur apres changemenent");
+  let result = adresse.value;
+  console.log(result, "resultat");
+
+if (result){
+  adresse.style.cssText += 'border:2px green solid';
+  adresserror.innerHTML = 'ok'
+  return true
+}else{
+  adresse.style.cssText += 'border:2px red solid';
+  adresserror.innerHTML = 'pas ok'
+  return false
+}
+}
+adresse.addEventListener("change", verifadresse);
+
+//ville
+let ville = document.getElementById('city');
+let villerror = document.getElementById('cityErrorMsg')
+
+function verifville(){
+  console.log(ville.value,"valeur apres changemenent");
+  let result = ville.value.match(regexname);
+  console.log(result, "resultat");
+
+if (result){
+  ville.style.cssText += 'border:2px green solid';
+  villerror.innerHTML = 'ok'
+  return true
+}else{
+  ville.style.cssText += 'border:2px red solid';
+  villerror.innerHTML = 'pas ok'
+  return false
+}
+}
+ville.addEventListener("change", verifville);
+
+//ville
+let email = document.getElementById('email');
+let emailerror = document.getElementById('emailErrorMsg')
+
+function verifmail(){
+  console.log(email.value,"valeur apres changemenent");
+  let result = email.value.match(regexmail);
+  console.log(result, "resultat");
+
+if (result){
+  email.style.cssText += 'border:2px green solid';
+  emailerror.innerHTML = 'ok'
+  return true
+}else{
+  email.style.cssText += 'border:2px red solid';
+  emailerror.innerHTML = 'pas ok'
+  return false
+}
+}
+email.addEventListener("change", verifmail);
+
+
+let commande = document.getElementById('order');
+function order(event){
+  event.preventDefault();
+  if(verifprenom() && verifnom() && verifadresse() && verifville() && verifmail()){
+    console.log("form ok");
+
+    const products = []
+    storage.forEach((item) =>{
+      products.push(item.id)
+    });
+
+    const data = {
+      contact:{
+        firstName:prenom.value,
+        lastName:nom.value,
+        address:adresse.value,
+        city:ville.value,
+        email:email.value
+      },
+      products
+    }
+    console.log(data);
+
+    fetch("http://localhost:3000/api/products/order",{
+      method:"POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    }).then(res => res.json()).then(result => {
+      console.log(result);
+    })
+
+  } else {
+    console.log("form pas ok");
+    return
+  }
+  
+}
+commande.addEventListener("click", order);
+
 
 /*Object.keys(storage).map((key) => {
     console.log(storage[key])
