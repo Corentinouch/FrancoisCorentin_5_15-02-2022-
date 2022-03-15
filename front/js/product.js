@@ -1,19 +1,17 @@
+
 const str = window.location.href;
 console.log(str,"location");
 const url = new URL(str);
 console.log(url,"URL");
 const id = url.searchParams.get("id");
 console.log(id,"ID");
-/*let storage = JSON.parse(localStorage.getItem("panier"));
-console.log(storage);
-let objJson = storage !== null ? storage : {};*/
 
 
     fetch("http://localhost:3000/api/products/" + id).then(async (res) =>{
         const produit = await res.json();
         console.log(produit);
 
-//Remplacement des valeurs dans le .html 
+//Remplacement des valeurs dans le html 
 
     let item = document.querySelector(".item");
     
@@ -99,25 +97,6 @@ function storageAll(){
     }
     alert("Ajouté au panier");
 
-    /*if(objJson[produit._id] !== undefined){
-        objJson[produit._id].color[couleur.value] === undefined ? objJson[produit._id].color[couleur.value] = quantity.value 
-            : objJson[produit._id].color[couleur.value] = parseInt(quantity.value) + parseInt(objJson[produit._id].color[couleur.value]);
-    }else{
-        objJson[produit._id] = {}
-        objJson[produit._id].color = {}
-        objJson[produit._id].color[couleur.value] = parseInt(quantity.value);
-        
-       /* objJson[produit._id].name = produit.name;
-        objJson[produit._id].price = produit.price;
-        objJson[produit._id].imageUrl = produit.imageUrl;
-        objJson[produit._id].description = produit.description;
-    }
-        
-        let objLinea = JSON.stringify(objJson);
-        localStorage.setItem("panier",objLinea);{
-            alert("Votre canapé a bien été ajouter au panier !")
-        }
-*/
 }
     
     let addItem = document.getElementById('addToCart');

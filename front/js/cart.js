@@ -18,10 +18,6 @@ fetch("http://localhost:3000/api/products").then(async (res) => {
       item.price = produit.price;
       item.name = produit.name;
 
-      /*console.log(item.price);
-      console.log(item.quantity);
-      let totalitem = item.price * item.quantity;
-      console.log(totalitem);*/
 
       console.log(produit);
     })
@@ -32,10 +28,6 @@ fetch("http://localhost:3000/api/products").then(async (res) => {
     for (let i = 0; i < storage.length; i++) {
       pricetotal += storage[i].price * storage[i].quantity;
       quantitytotal += storage[i].quantity;
-      /*console.log(storage[i].price, storage[i].quantity,"start");
-      
-      let totalprice = storage[i].price * storage[i].quantity;
-      console.log(totalprice,"multiplication");*/
 
 
       carts.innerHTML +=
@@ -68,7 +60,8 @@ fetch("http://localhost:3000/api/products").then(async (res) => {
       `${quantitytotal}`;
     document.getElementById('totalPrice').innerHTML +=
       `${pricetotal}`;
-  }else{
+
+  } else {
     let cartprice = document.querySelector(".cart__price");
     let cartform = document.querySelector(".cart__order");
     cartprice.remove();
@@ -113,7 +106,6 @@ fetch("http://localhost:3000/api/products").then(async (res) => {
   let suppr = document.querySelectorAll('.deleteItem');
   console.log(suppr);
 
-  
   for (let i = 0; i < suppr.length; i++) {
     console.log(storage[i],"test")
     suppr[i].addEventListener("click", function() {
@@ -139,9 +131,12 @@ fetch("http://localhost:3000/api/products").then(async (res) => {
   }
 });
 
+// Fin du fetch
+
+//REGEX VERIF
 //Prénom
 let prenom = document.getElementById('firstName');
-let regexname = /^[A-Za-z -]+$/;
+let regexname = /^[A-Za-z - éèàùîûôê]+$/;
 let regexmail = /\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi;
 
 let prenomerror = document.getElementById('firstNameErrorMsg')
@@ -154,12 +149,12 @@ function verifprenom(){
   console.log(result, "resultat");
 
   if (result){
-    prenom.style.cssText += 'border:2px green solid';
-    prenomerror.innerHTML = 'ok'
+    prenom.style.cssText += 'border:0px red solid';
+    prenomerror.innerHTML = ''
     return true;
   }else{
-    prenom.style.cssText += 'border:2px red solid';
-    prenomerror.innerHTML = 'pas ok'
+    prenom.style.cssText += 'border:1px red solid';
+    prenomerror.innerHTML = 'Erreur ! Le prénom ne peux contenir que des lettres'
     return false;
   }
 };
@@ -175,12 +170,12 @@ function verifnom(){
   console.log(result, "resultat");
 
 if (result){
-  nom.style.cssText += 'border:2px green solid';
-  nomerror.innerHTML = 'ok'
+  nom.style.cssText += 'border:0px red solid';
+  nomerror.innerHTML = ''
   return true
 }else{
-  nom.style.cssText += 'border:2px red solid';
-  nomerror.innerHTML = 'pas ok'
+  nom.style.cssText += 'border:1px red solid';
+  nomerror.innerHTML = 'Erreur ! Le nom ne peux contenir que des lettres'
   return false
 }
 }
@@ -198,12 +193,12 @@ function verifadresse(){
   console.log(result, "resultat");
 
 if (result){
-  adresse.style.cssText += 'border:2px green solid';
-  adresserror.innerHTML = 'ok'
+  adresse.style.cssText += 'border:0px red solid';
+  adresserror.innerHTML = ''
   return true
 }else{
-  adresse.style.cssText += 'border:2px red solid';
-  adresserror.innerHTML = 'pas ok'
+  adresse.style.cssText += 'border:1px red solid';
+  adresserror.innerHTML = 'Erreur ! Le champ adresse est vide'
   return false
 }
 }
@@ -219,18 +214,18 @@ function verifville(){
   console.log(result, "resultat");
 
 if (result){
-  ville.style.cssText += 'border:2px green solid';
-  villerror.innerHTML = 'ok'
+  ville.style.cssText += 'border:0px red solid';
+  villerror.innerHTML = ''
   return true
 }else{
-  ville.style.cssText += 'border:2px red solid';
-  villerror.innerHTML = 'pas ok'
+  ville.style.cssText += 'border:1px red solid';
+  villerror.innerHTML = 'Erreur ! La ville ne peux contenir que des lettres'
   return false
 }
 }
 ville.addEventListener("change", verifville);
 
-//ville
+//email
 let email = document.getElementById('email');
 let emailerror = document.getElementById('emailErrorMsg')
 
@@ -240,12 +235,12 @@ function verifmail(){
   console.log(result, "resultat");
 
 if (result){
-  email.style.cssText += 'border:2px green solid';
-  emailerror.innerHTML = 'ok'
+  email.style.cssText += 'border:0px red solid';
+  emailerror.innerHTML = ''
   return true
 }else{
-  email.style.cssText += 'border:2px red solid';
-  emailerror.innerHTML = 'pas ok'
+  email.style.cssText += 'border:1px red solid';
+  emailerror.innerHTML = 'Erreur ! Le champ email est incorrect'
   return false
 }
 }
@@ -273,14 +268,15 @@ function order(event){
       },
       products
     }
-    console.log(data);
+    console.log(data,"data");
 
     fetch("http://localhost:3000/api/products/order",{
       method:"POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     }).then(res => res.json()).then(result => {
-      console.log(result);
+       console.log(result,"result");
+      window.location.replace(`./confirmation.html?=${result.orderId}`);
     })
 
   } else {
@@ -290,43 +286,3 @@ function order(event){
   
 }
 commande.addEventListener("click", order);
-
-
-/*Object.keys(storage).map((key) => {
-    console.log(storage[key])
-    Object.keys(storage[key].color).map((k) => {
-        console.log(k,storage[key].color[k]);
-    })
-})*/
-
-
-
-/*cards.innerHTML += Object.keys(storage).map((key) => {
-fetch("http://localhost:3000/api/products/").then(async (res) =>{
-        const produit = await res.json();
-});
-    return Object.keys(storage[key].color).map((k) => {
-        return `<article class="cart__item" data-id="${key}" data-color="${k}">
-                    <div class="cart__item__img">
-                        <img src="${storage[key].imageUrl}" alt="Photographie d'un canapé">
-                    </div>
-                    <div class="cart__item__content">
-                        <div class="cart__item__content__description">
-                            <h2>${storage[key].name}</h2>
-                            <p>${k}</p>
-                            <p>${storage[key].price} €</p>
-                        </div>
-                        <div class="cart__item__content__settings">
-                            <div class="cart__item__content__settings__quantity">
-                            <p>Qté : </p>
-                            <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="42">
-                            <!--<div>${k} : ${storage[key].color[k]}</div>-->
-                            </div>
-                            <div class="cart__item__content__settings__delete">
-                            <p class="deleteItem">Supprimer</p>
-                            </div>
-                        </div>
-                    </div>
-                </article>`;
-            }).join('');
-        }).join('');*/
