@@ -1,4 +1,4 @@
-
+//Recuperation de l'id du produit sur lequel l'utilisateur a cliqué
 const str = window.location.href;
 console.log(str,"location");
 const url = new URL(str);
@@ -34,17 +34,13 @@ console.log(id,"ID");
 //Menu déroulent des couleurs de chaque produit
 
     let colors = produit.colors;
-    console.log(colors);
 
     for (let i = 0; i < colors.length; i++) {
-        //const color = colors[i];
-        //console.log(color);
         item.querySelector("#colors").innerHTML +=
             `<option value="${produit.colors[i]}">${produit.colors[i]}</option>`;
     }
-    console.log(produit._id);
 
-//Fonction storage au moment du click sur ajout
+//Fonction storage au moment du clique sur "ajout au panier"
 
 function storageAll(){
     let quantity = document.querySelector("#quantity").value;
@@ -63,37 +59,36 @@ function storageAll(){
         return;
     }
 
+    //Vérification présence ou non d'une item identique
     item["quantity"] = quantity;
     item["color"] = color;
-    console.log(quantity);
+    console.log(quantity,color);
     let cart = [];
 
     const storageCart = JSON.parse(storage.getItem("cart"));
 
+    //Si l'id de l'item existe on regarde si sa couleur existe
     if (storageCart && storageCart.length ) {
         cart = JSON.parse(storage.getItem("cart"));
 
         const hasColor = cart.filter(
             (x) => x.color === color && x.id === id
         );
-        console.log(cart,"CARTE");
-            
-            console.log(quantity);
 
+                // Si la couleur existe déjà on ajoute la quantité ajoutée à celle dejà présente
                 if (hasColor && hasColor.length){
                     hasColor[0].quantity = parseInt(quantity) + parseInt(hasColor[0].quantity);
                     console.log(hasColor[0].quantity);
-
+                // Sinon on ajoute un nouveau produit
                 }else {
                     cart.push({id: produit._id, quantity: parseInt(item.quantity), color: item.color});
                 }
 
         storage.setItem("cart",JSON.stringify(cart));
-
+    //Si l'item n'existe pas on la créer 
     } else {
         cart.push({id: produit._id, quantity: parseInt(item.quantity), color: item.color});
         storage.setItem("cart", JSON.stringify(cart));
-        console.log(cart);
     }
     alert("Votre article a été ajouté au panier");
 

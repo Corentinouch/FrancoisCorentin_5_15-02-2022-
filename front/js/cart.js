@@ -1,13 +1,11 @@
 let storage = JSON.parse(localStorage.getItem('cart'));
-console.log(storage);
 let carts = document.getElementById('cart__items');
-//console.log(carts);
 
 fetch("http://localhost:3000/api/products").then(async (res) => {
-  //console.log(res);
   const produits = await res.json();
   console.log(produits);
 
+  // Si il y a des items dans le panier..Pour chaque item du storage on viens lui ajouter l'id correspondant dans l'api
   if (storage != null) {
     storage.forEach((item) => {
       console.log(item);
@@ -17,12 +15,8 @@ fetch("http://localhost:3000/api/products").then(async (res) => {
       item.imageUrl = produit.imageUrl;
       item.price = produit.price;
       item.name = produit.name;
-
-
-      console.log(produit);
     })
-
-    console.log(storage);
+  // Calcul du prix total et du nombre d'item total
     let quantitytotal = 0;
     let pricetotal = 0;
     for (let i = 0; i < storage.length; i++) {
@@ -53,14 +47,13 @@ fetch("http://localhost:3000/api/products").then(async (res) => {
   </div>
 </article>`;
     }
-    console.log(pricetotal);
-    console.log(quantitytotal);
 
     document.getElementById('totalQuantity').innerHTML +=
       `${quantitytotal}`;
     document.getElementById('totalPrice').innerHTML +=
       `${pricetotal}`;
 
+  // Sinon on affiche un message 
   } else {
     let cartprice = document.querySelector(".cart__price");
     let cartform = document.querySelector(".cart__order");
@@ -69,91 +62,78 @@ fetch("http://localhost:3000/api/products").then(async (res) => {
     document.getElementById('cart__items').innerHTML +=
       `<h2 style="text-align:center;">Le panier est vide !<br> Ajoutez des articles à partir de <a href="index.html">l'écran d'accueil</a></h2>`;
   }
-
+  // Modification du nombre dans la panier
   let panierQuantity = document.querySelectorAll('.itemQuantity');
-  console.log(panierQuantity);
 
   for (let i = 0; i < panierQuantity.length; i++) {
 
-    panierQuantity[i].addEventListener("change", function(event) {
+    panierQuantity[i].addEventListener("change", function (event) {
       let quantity = parseInt(event.target.value);
-      if(quantity <= 0 || quantity > 100){
+      if (quantity <= 0 || quantity > 100) {
         alert("Veuillez entrer un nombre entre 1 et 100")
         return;
-    }
-      console.log("panierQuantity");
+      }
       let id_suppr = panierQuantity[i].closest('.cart__item').dataset.id;
       let color_suppr = panierQuantity[i].closest('.cart__item').dataset.color;
-      storage= storage.map((item)=>{
-        if(item.id === id_suppr && item.color === color_suppr){
+      storage = storage.map((item) => {
+        if (item.id === id_suppr && item.color === color_suppr) {
           return {
             ...item,
-          //spread operator
+            //spread operator
             quantity
           }
-        }else{
+        } else {
           return item;
         }
       })
       localStorage.setItem("cart", JSON.stringify(storage));
       window.location.reload();
-      //let cart = [];
-      //localStorage.setItem("cart",JSON.stringify(cart));
-      //changement sur le local storage
     });
   }
-  
+
+  //Suppresion d'une item dasn le panier
   let suppr = document.querySelectorAll('.deleteItem');
-  console.log(suppr);
 
   for (let i = 0; i < suppr.length; i++) {
-    console.log(storage[i],"test")
-    suppr[i].addEventListener("click", function() {
+    suppr[i].addEventListener("click", function () {
       let id_suppr = suppr[i].closest('.cart__item').dataset.id;
       let color_suppr = suppr[i].closest('.cart__item').dataset.color;
-      storage = storage.filter((item) =>{
-        if(item.id !== id_suppr || item.color !== color_suppr){
-          return item;
+        storage = storage.filter((item) => {
+          if (item.id !== id_suppr || item.color !== color_suppr) {
+            return item;
+          }
+        })
+        if (storage.length < 1) {
+          localStorage.removeItem("cart");
+        } else {
+          localStorage.setItem("cart", JSON.stringify(storage));
         }
-      })
-      //suppr[i].closest('.cart__item').remove();
-      //remove du localStorage
-      console.log(storage);
-     if (storage.length < 1){
-       localStorage.removeItem("cart");
-     }else{
-        localStorage.setItem("cart", JSON.stringify(storage)); 
-     }
-     window.location.reload();
-     
-     
+        window.location.reload();
     });
   }
 });
 
-// Fin du fetch
 
-//REGEX VERIF
+//Vérification du formulaire grâce au regex
+
 //Prénom
 let prenom = document.getElementById('firstName');
 let regexname = /^[A-Za-z - éèàùîûôê]+$/;
 let regexmail = /\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi;
 
 let prenomerror = document.getElementById('firstNameErrorMsg')
-console.log(prenom);
 
-
-function verifprenom(){
-  console.log(prenom.value,"valeur apres changemenent");
+function verifprenom() {
+  console.log(prenom.value, "valeur apres changemenent");
   let result = prenom.value.match(regexname);
   console.log(result, "resultat");
 
-  if (result){
+  if (result) {
     prenom.style.cssText += 'border:0px red solid';
     prenomerror.innerHTML = ''
     emptyform.innerHTML = ''
     return true;
-  }else{
+  } else {
     prenom.style.cssText += 'border:1px red solid';
     prenomerror.innerHTML = 'Erreur ! Le prénom ne peux contenir que des lettres'
     return false;
@@ -162,136 +142,134 @@ function verifprenom(){
 prenom.addEventListener("change", verifprenom);
 
 //Nom
+
 let nom = document.getElementById('lastName');
 let nomerror = document.getElementById('lastNameErrorMsg')
 
-function verifnom(){
-  console.log(nom.value,"valeur apres changemenent");
+function verifnom() {
   let result = nom.value.match(regexname);
-  console.log(result, "resultat");
 
-if (result){
-  nom.style.cssText += 'border:0px red solid';
-  nomerror.innerHTML = ''
-  emptyform.innerHTML = ''
-  return true
-}else{
-  nom.style.cssText += 'border:1px red solid';
-  nomerror.innerHTML = 'Erreur ! Le nom ne peux contenir que des lettres'
-  return false
-}
+  if (result) {
+    nom.style.cssText += 'border:0px red solid';
+    nomerror.innerHTML = ''
+    emptyform.innerHTML = ''
+    return true
+  } else {
+    nom.style.cssText += 'border:1px red solid';
+    nomerror.innerHTML = 'Erreur ! Le nom ne peux contenir que des lettres'
+    return false
+  }
 }
 nom.addEventListener("change", verifnom);
-  
+
 
 //adresse
+
 let adresse = document.getElementById('address');
 let adresserror = document.getElementById('addressErrorMsg')
-console.log(adresse);
 
-function verifadresse(){
-  console.log(adresse.value,"valeur apres changemenent");
+function verifadresse() {
   let result = adresse.value;
-  console.log(result, "resultat");
 
-if (result){
-  adresse.style.cssText += 'border:0px red solid';
-  adresserror.innerHTML = ''
-  emptyform.innerHTML = ''
-  return true
-}else{
-  adresse.style.cssText += 'border:1px red solid';
-  adresserror.innerHTML = 'Erreur ! Le champ adresse est vide'
-  return false
-}
+  if (result) {
+    adresse.style.cssText += 'border:0px red solid';
+    adresserror.innerHTML = ''
+    emptyform.innerHTML = ''
+    return true
+  } else {
+    adresse.style.cssText += 'border:1px red solid';
+    adresserror.innerHTML = 'Erreur ! Le champ adresse est vide'
+    return false
+  }
 }
 adresse.addEventListener("change", verifadresse);
 
 //ville
+
 let ville = document.getElementById('city');
 let villerror = document.getElementById('cityErrorMsg')
 
-function verifville(){
-  console.log(ville.value,"valeur apres changemenent");
+function verifville() {
   let result = ville.value.match(regexname);
-  console.log(result, "resultat");
 
-if (result){
-  ville.style.cssText += 'border:0px red solid';
-  villerror.innerHTML = ''
-  emptyform.innerHTML = ''
-  return true
-}else{
-  ville.style.cssText += 'border:1px red solid';
-  villerror.innerHTML = 'Erreur ! La ville ne peux contenir que des lettres'
-  return false
-}
+  if (result) {
+    ville.style.cssText += 'border:0px red solid';
+    villerror.innerHTML = ''
+    emptyform.innerHTML = ''
+    return true
+  } else {
+    ville.style.cssText += 'border:1px red solid';
+    villerror.innerHTML = 'Erreur ! La ville ne peux contenir que des lettres'
+    return false
+  }
 }
 ville.addEventListener("change", verifville);
 
 //email
+
 let email = document.getElementById('email');
 let emailerror = document.getElementById('emailErrorMsg')
 
-function verifmail(){
-  console.log(email.value,"valeur apres changemenent");
+function verifmail() {
   let result = email.value.match(regexmail);
-  console.log(result, "resultat");
 
-if (result){
-  email.style.cssText += 'border:0px red solid';
-  emailerror.innerHTML = ''
-  emptyform.innerHTML = ''
-  return true
-}else{
-  email.style.cssText += 'border:1px red solid';
-  emailerror.innerHTML = 'Erreur ! Le champ email est incorrect'
-  return false
-}
+  if (result) {
+    email.style.cssText += 'border:0px red solid';
+    emailerror.innerHTML = ''
+    emptyform.innerHTML = ''
+    return true
+  } else {
+    email.style.cssText += 'border:1px red solid';
+    emailerror.innerHTML = 'Erreur ! Le champ email est incorrecte'
+    return false
+  }
 }
 email.addEventListener("change", verifmail);
 
 
 let commande = document.getElementById('order');
 let emptyform = document.getElementById('emptyForm');
-function order(event){
+
+
+// Fonction commander
+function order(event) {
   event.preventDefault();
-  if(verifprenom() && verifnom() && verifadresse() && verifville() && verifmail()){
-    console.log("form ok");
-    
+  // Si tous les champs sont bon..
+  if (verifprenom() && verifnom() && verifadresse() && verifville() && verifmail()) {
+
     const products = []
-    storage.forEach((item) =>{
+    storage.forEach((item) => {
       products.push(item.id)
     });
 
     const data = {
-      contact:{
-        firstName:prenom.value,
-        lastName:nom.value,
-        address:adresse.value,
-        city:ville.value,
-        email:email.value
+      contact: {
+        firstName: prenom.value,
+        lastName: nom.value,
+        address: adresse.value,
+        city: ville.value,
+        email: email.value
       },
       products
     }
-    console.log(data,"data");
+    console.log(data, "data");
 
-    fetch("http://localhost:3000/api/products/order",{
-      method:"POST",
+    fetch("http://localhost:3000/api/products/order", {
+      method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     }).then(res => res.json()).then(result => {
-       console.log(result,"result");
-       
-      window.location.replace(`./confirmation.html?=${result.orderId}`);
-    })
+      console.log(result, "result");
 
+      window.location.replace(`./confirmation.html?id=${result.orderId}`);
+    })
+    // Sinon message d'erreur
   } else {
     emptyform.style.cssText += 'text-align:center; margin:5px;color:#fbbcbc'
     emptyform.innerHTML = "Erreur ! <br>Veillez a bien compléter les informations afin de finaliser votre commande"
     console.log("form pas ok");
     return
   }
-  
+
 }
 commande.addEventListener("click", order);

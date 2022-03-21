@@ -4,14 +4,9 @@ console.log(str,"location");
 const url = new URL(str);
 console.log(url,"URL");
 
-let regexname = /[a-zA-Z0-9 -]+$/;
-
-const id = url.search;
+const id = url.searchParams.get("id");
 console.log(id,"ID");
-
-let result = id.match(regexname);
-console.log(result);
 
 let num = document.getElementById('orderId');
 localStorage.clear();
-num.innerHTML = result;
+num.innerHTML = id;
