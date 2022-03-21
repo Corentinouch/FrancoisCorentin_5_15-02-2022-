@@ -248,6 +248,7 @@ email.addEventListener("change", verifmail);
 
 
 let commande = document.getElementById('order');
+let emptyform = document.getElementById('emptyForm');
 function order(event){
   event.preventDefault();
   if(verifprenom() && verifnom() && verifadresse() && verifville() && verifmail()){
@@ -276,10 +277,13 @@ function order(event){
       body: JSON.stringify(data),
     }).then(res => res.json()).then(result => {
        console.log(result,"result");
+       
       window.location.replace(`./confirmation.html?=${result.orderId}`);
     })
 
   } else {
+    emptyform.style.cssText += 'text-align:center; margin:5px;color:#fbbcbc'
+    emptyform.innerHTML = "Erreur ! <br>Veillez a bien compléter les informations afin de finaliser votre commande"
     console.log("form pas ok");
     return
   }

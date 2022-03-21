@@ -13,4 +13,5 @@ let result = id.match(regexname);
 console.log(result);
 
 let num = document.getElementById('orderId');
+localStorage.clear();
 num.innerHTML = result;

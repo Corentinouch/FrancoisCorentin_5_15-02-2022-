@@ -44,7 +44,7 @@ console.log(id,"ID");
     }
     console.log(produit._id);
 
-//Fontion storage au moment du click sur ajout
+//Fonction storage au moment du click sur ajout
 
 function storageAll(){
     let quantity = document.querySelector("#quantity").value;
@@ -95,7 +95,7 @@ function storageAll(){
         storage.setItem("cart", JSON.stringify(cart));
         console.log(cart);
     }
-    alert("Ajouté au panier");
+    alert("Votre article a été ajouté au panier");
 
 }
     
