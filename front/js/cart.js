@@ -151,6 +151,7 @@ function verifprenom(){
   if (result){
     prenom.style.cssText += 'border:0px red solid';
     prenomerror.innerHTML = ''
+    emptyform.innerHTML = ''
     return true;
   }else{
     prenom.style.cssText += 'border:1px red solid';
@@ -172,6 +173,7 @@ function verifnom(){
 if (result){
   nom.style.cssText += 'border:0px red solid';
   nomerror.innerHTML = ''
+  emptyform.innerHTML = ''
   return true
 }else{
   nom.style.cssText += 'border:1px red solid';
@@ -195,6 +197,7 @@ function verifadresse(){
 if (result){
   adresse.style.cssText += 'border:0px red solid';
   adresserror.innerHTML = ''
+  emptyform.innerHTML = ''
   return true
 }else{
   adresse.style.cssText += 'border:1px red solid';
@@ -216,6 +219,7 @@ function verifville(){
 if (result){
   ville.style.cssText += 'border:0px red solid';
   villerror.innerHTML = ''
+  emptyform.innerHTML = ''
   return true
 }else{
   ville.style.cssText += 'border:1px red solid';
@@ -237,6 +241,7 @@ function verifmail(){
 if (result){
   email.style.cssText += 'border:0px red solid';
   emailerror.innerHTML = ''
+  emptyform.innerHTML = ''
   return true
 }else{
   email.style.cssText += 'border:1px red solid';
@@ -253,7 +258,7 @@ function order(event){
   event.preventDefault();
   if(verifprenom() && verifnom() && verifadresse() && verifville() && verifmail()){
     console.log("form ok");
-
+    
     const products = []
     storage.forEach((item) =>{
       products.push(item.id)
