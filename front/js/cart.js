@@ -5,7 +5,7 @@ fetch("http://localhost:3000/api/products").then(async (res) => {
   const produits = await res.json();
   console.log(produits);
 
-  // Si il y a des items dans le panier..Pour chaque item du storage on viens lui ajouter l'id correspondant dans l'api
+  // Si il y a des items dans le panier..Pour chaque item du storage on viens ajouter les infos correspondantes dans l'api en fonction de l'id
   if (storage != null) {
     storage.forEach((item) => {
       console.log(item);
@@ -237,6 +237,7 @@ function order(event) {
   // Si tous les champs sont bon..
   if (verifprenom() && verifnom() && verifadresse() && verifville() && verifmail()) {
 
+    //Création de l'objet data avec le contact et le ou les produits
     const products = []
     storage.forEach((item) => {
       products.push(item.id)
