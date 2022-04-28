@@ -1,10 +1,10 @@
-
+let lesitems = document.getElementById("items");
 //Récupération des données de l'API
 fetch("http://localhost:3000/api/products").then(async (res) => {
     console.log(res);
     const produits = await res.json();
     console.log(produits);
-    let lesitems = document.getElementById("items");
+    
 
 //Boucle sur les items et ajout en html avec les variables
     for (let i = 0; i < produits.length; i++) {
@@ -19,4 +19,8 @@ fetch("http://localhost:3000/api/products").then(async (res) => {
                 </article>
             </a>`;
     }
-});
+}).catch((error) => {
+    lesitems.innerHTML =
+    `<h3> Oups.. nous avons un problème sur le serveur </h3>`;
+    console.log(error,"There is an error")
+  });

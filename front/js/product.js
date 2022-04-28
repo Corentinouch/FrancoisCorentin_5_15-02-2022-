@@ -6,14 +6,14 @@ console.log(url,"URL");
 const id = url.searchParams.get("id");
 console.log(id,"ID");
 
-
+let item = document.querySelector(".item");
     fetch("http://localhost:3000/api/products/" + id).then(async (res) =>{
         const produit = await res.json();
         console.log(produit);
 
 //Remplacement des valeurs dans le html 
 
-    let item = document.querySelector(".item");
+    
     
         item.querySelector(".item__img").innerHTML +=
         `<img src="${produit.imageUrl}" alt=${produit.altTxt}>
@@ -85,6 +85,7 @@ function storageAll(){
                 }
 
         storage.setItem("cart",JSON.stringify(cart));
+
     //Si l'item n'existe pas on la créer 
     } else {
         cart.push({id: produit._id, quantity: parseInt(item.quantity), color: item.color});
@@ -99,5 +100,9 @@ function storageAll(){
         storageAll();
     });
 
-});
+}).catch((error) => { 
+    item.innerHTML =
+    `<h3> Oups.. nous avons un problème sur le serveur </h3>`;
+    console.log(error,"There is an error")
+  });
 

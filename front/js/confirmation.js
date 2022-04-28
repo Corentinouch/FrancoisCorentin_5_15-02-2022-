@@ -8,5 +8,5 @@ const id = url.searchParams.get("id");
 console.log(id,"ID");
 
 let num = document.getElementById('orderId');
-localStorage.clear();
+localStorage.removeItem("cart");
 num.innerHTML = id;

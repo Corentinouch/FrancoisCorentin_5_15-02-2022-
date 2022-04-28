@@ -1,5 +1,6 @@
 let storage = JSON.parse(localStorage.getItem('cart'));
 let carts = document.getElementById('cart__items');
+let AllBasket = document.getElementById('cartAndFormContainer');
 
 fetch("http://localhost:3000/api/products").then(async (res) => {
   const produits = await res.json();
@@ -91,7 +92,7 @@ fetch("http://localhost:3000/api/products").then(async (res) => {
     });
   }
 
-  //Suppresion d'une item dasn le panier
+  //Suppresion d'une item dans le panier
   let suppr = document.querySelectorAll('.deleteItem');
 
   for (let i = 0; i < suppr.length; i++) {
@@ -111,33 +112,42 @@ fetch("http://localhost:3000/api/products").then(async (res) => {
         window.location.reload();
     });
   }
+})
+.catch((error) => { 
+  AllBasket.innerHTML =
+  `<h3 style="text-align:center"> Oups.. nous avons un problème sur le serveur </h3>`;
+  console.log(error,"There is an error")
 });
 
 
 //Vérification du formulaire grâce au regex
+function verifyInput(input, regex, errorTag, errorMessage){
+  let result = input.value.match(regex);
+  if (result) {
+    input.style.cssText += 'border:0px red solid';
+    errorTag.innerHTML = ''
+    emptyform.innerHTML = ''
+    return true;
+  } else {
+    input.style.cssText += 'border:1px red solid';
+    errorTag.innerHTML = errorMessage
+    return false;
+  }
+}
 
-//Prénom
+
+
 let prenom = document.getElementById('firstName');
 let regexname = /^[A-Za-z - éèàùîûôê]+$/;
 let regexmail = /\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi;
+let regexadresse = /^[A-Za-z1-9 - éèàùîûôê]+$/;
+
+//Prénom
 
 let prenomerror = document.getElementById('firstNameErrorMsg')
 
 function verifprenom() {
-  console.log(prenom.value, "valeur apres changemenent");
-  let result = prenom.value.match(regexname);
-  console.log(result, "resultat");
-
-  if (result) {
-    prenom.style.cssText += 'border:0px red solid';
-    prenomerror.innerHTML = ''
-    emptyform.innerHTML = ''
-    return true;
-  } else {
-    prenom.style.cssText += 'border:1px red solid';
-    prenomerror.innerHTML = 'Erreur ! Le prénom ne peux contenir que des lettres'
-    return false;
-  }
+  return verifyInput(prenom, regexname, prenomerror, "Erreur ! Le prenom ne peux contenir que des lettres")
 };
 prenom.addEventListener("change", verifprenom);
 
@@ -147,18 +157,8 @@ let nom = document.getElementById('lastName');
 let nomerror = document.getElementById('lastNameErrorMsg')
 
 function verifnom() {
-  let result = nom.value.match(regexname);
+  return verifyInput(nom, regexname, nomerror, "Erreur ! Le nom ne peux contenir que des lettres")
 
-  if (result) {
-    nom.style.cssText += 'border:0px red solid';
-    nomerror.innerHTML = ''
-    emptyform.innerHTML = ''
-    return true
-  } else {
-    nom.style.cssText += 'border:1px red solid';
-    nomerror.innerHTML = 'Erreur ! Le nom ne peux contenir que des lettres'
-    return false
-  }
 }
 nom.addEventListener("change", verifnom);
 
@@ -169,7 +169,8 @@ let adresse = document.getElementById('address');
 let adresserror = document.getElementById('addressErrorMsg')
 
 function verifadresse() {
-  let result = adresse.value;
+  return verifyInput(adresse, regexadresse, adresserror,"Erreur ! Le champ adresse est vide")
+  /*let result = adresse.value;
 
   if (result) {
     adresse.style.cssText += 'border:0px red solid';
@@ -180,7 +181,7 @@ function verifadresse() {
     adresse.style.cssText += 'border:1px red solid';
     adresserror.innerHTML = 'Erreur ! Le champ adresse est vide'
     return false
-  }
+  }*/
 }
 adresse.addEventListener("change", verifadresse);
 
@@ -190,18 +191,7 @@ let ville = document.getElementById('city');
 let villerror = document.getElementById('cityErrorMsg')
 
 function verifville() {
-  let result = ville.value.match(regexname);
-
-  if (result) {
-    ville.style.cssText += 'border:0px red solid';
-    villerror.innerHTML = ''
-    emptyform.innerHTML = ''
-    return true
-  } else {
-    ville.style.cssText += 'border:1px red solid';
-    villerror.innerHTML = 'Erreur ! La ville ne peux contenir que des lettres'
-    return false
-  }
+  return verifyInput(ville, regexname, villerror, "Erreur ! La ville ne peux contenir que des lettres")
 }
 ville.addEventListener("change", verifville);
 
@@ -211,7 +201,8 @@ let email = document.getElementById('email');
 let emailerror = document.getElementById('emailErrorMsg')
 
 function verifmail() {
-  let result = email.value.match(regexmail);
+  return verifyInput(email, regexmail, emailerror,"Erreur ! Le champ email est incorrecte")
+  /*let result = email.value.match(regexmail);
 
   if (result) {
     email.style.cssText += 'border:0px red solid';
@@ -222,7 +213,7 @@ function verifmail() {
     email.style.cssText += 'border:1px red solid';
     emailerror.innerHTML = 'Erreur ! Le champ email est incorrecte'
     return false
-  }
+  }*/
 }
 email.addEventListener("change", verifmail);
 
@@ -263,7 +254,9 @@ function order(event) {
       console.log(result, "result");
 
       window.location.replace(`./confirmation.html?id=${result.orderId}`);
-    })
+    }).catch((error) =>{
+      console.log(error, "there is an error");
+    });
     // Sinon message d'erreur
   } else {
     emptyform.style.cssText += 'text-align:center; margin:5px;color:#fbbcbc'
